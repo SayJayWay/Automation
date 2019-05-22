@@ -1,0 +1,37 @@
+path = getDirectory("Choose a Directory"); 
+filename = getFileList(path); 
+
+for (i=0; i<filename.length; i++) { 
+        if(endsWith(filename[i], ".czi")) { 
+                open(path+filename[i]); 
+		title = getTitle();
+		run("Split Channels");
+
+		selectWindow("C3-"+title); 
+		titleRed = getTitle; 
+
+		selectWindow("C2-"+title); 
+		titleGreen = getTitle; 
+
+		selectWindow("C1-"+title); 
+		titleBlue = getTitle; 
+
+		run("Merge Channels...", "red=["+titleRed+"] green=["+titleGreen+"] blue=["+titleBlue+"]");
+
+		run("Color Balance...");
+			waitForUser( "Pause","Correct Colour \n Press OK when you want to continue"); 
+			run("Close");
+
+		run("Subtract Background...");
+		//run("Subtract Background...", "rolling=150 separate sliding");
+			waitForUser( "Pause","Adjust Background \n Press OK when you want to continue"); 
+
+		run("Scale Bar...");
+		//run("Scale Bar...", "width=20 height=12 font=42 color=White background=None location=[Lower Right] bold");
+			waitForUser( "Pause","Add Scale Bar \n Press OK when you want to continue"); 
+
+		saveAs("Tiff", path + title);
+		//waitForUser( "Pause","Image OK?"); 
+		close(); close();
+	}
+}
